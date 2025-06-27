@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <title>PDF 识别填表系统</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container mt-4">
+    <h1 class="mb-4">PDF 识别填表系统</h1>
+    <form method="post" enctype="multipart/form-data">
+        <div class="form-group">
+            <label>上传 PDF 文件（可多选）</label>
+            <input type="file" name="pdfs" multiple class="form-control-file" accept="application/pdf">
+        </div>
+        <div class="form-group">
+            <label>上传 Excel 模板</label>
+            <input type="file" name="template" class="form-control-file" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+        </div>
+        <button type="submit" class="btn btn-primary">提交</button>
+    </form>
+</div>
+</body>
+</html>
