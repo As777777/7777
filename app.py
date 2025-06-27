@@ -1,6 +1,6 @@
 import os
 import re
-import tempfile
+import uuid
 from flask import Flask, render_template, request, send_from_directory, redirect, url_for
 import pdfplumber
 from pdf2image import convert_from_path
@@ -44,10 +44,10 @@ def fill_excel(template_path, fields):
     for key, cell in MAPPING.items():
         if key in fields:
             ws[cell] = fields[key]
-    tmp_fd, tmp_path = tempfile.mkstemp(suffix='.xlsx')
-    os.close(tmp_fd)
-    wb.save(tmp_path)
-    return tmp_path
+    filename = f"result_{uuid.uuid4().hex}.xlsx"
+    output_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+    wb.save(output_path)
+    return output_path
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -66,12 +66,12 @@ def index():
         fields = parse_fields(combined_text)
         output_path = fill_excel(template_path, fields)
         filename = os.path.basename(output_path)
-        return redirect(url_for('download_file', filename=filename))
+        return redirect(url_for('uploaded_file', filename=filename))
     return render_template('index.html')
 
-@app.route('/downloads/<filename>')
-def download_file(filename):
-    return send_from_directory('.', filename, as_attachment=True)
+@app.route('/uploads/<filename>')
+def uploaded_file(filename):
+    return send_from_directory(app.config['UPLOAD_FOLDER'], filename, as_attachment=True)
 
 if __name__ == '__main__':
     app.run(debug=True)
